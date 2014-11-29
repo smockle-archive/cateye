@@ -11,5 +11,11 @@
     "url": "https://github.com/smockle/cateye"
   },
   "author": "Clay Miller <clay@smockle.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "bin": {
+    "cateye": "cateye.js"
+  },
+  "devDependencies": {
+    "dashdash": "^1.7.1"
+  }
 }

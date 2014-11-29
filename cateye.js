@@ -3,7 +3,7 @@
 * The smallest example using dashdash for option processing.
 */
 
-var dashdash = require('../lib/dashdash');
+var dashdash = require('dashdash');
 
 // Define your options.
 var options = [
