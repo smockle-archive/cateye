@@ -15,6 +15,9 @@ $ node cateye.js -s
 # To play
 > play
 
+# To automate a complete game
+> all
+
 # To print current board
 > print
 
