@@ -140,10 +140,20 @@ Mancala.prototype.move = function(args) {
       marbles = this.board[index],
       len = this.board.length;
 
+  if (this.board[index] === 0 || index >= len) {
+    console.error("error: invalid move");
+    return false;
+  }
+
   this.board[index] = 0;
   while (marbles > 0) {
     this.board[(++index) % len]++;
     marbles--;
+  }
+
+  if (this.over()) {
+    this.print();
+    this.exit();
   }
 };
 
