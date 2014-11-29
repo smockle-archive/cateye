@@ -13,7 +13,8 @@ $ node cateye.js -h
 $ node cateye.js -s
 
 # To play
-> play
+> move <location>
+> move 0
 
 # To automate a complete game
 > all
