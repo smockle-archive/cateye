@@ -1,30 +1,48 @@
 #!/usr/bin/env node
-/*
-* The smallest example using dashdash for option processing.
-*/
 
-var dashdash = require('dashdash');
+var path = require("path"),
+    readline = require("readline");
+    dashdash = require("dashdash"),
+    Mancala = require("./mancala");
 
-// Define your options.
 var options = [
-{
-  names: ['verbose', 'v'],        // first name is opts key
-  type: 'bool',
-  help: 'More verbose output.'
-}
+  {
+    names: ['help', 'h'],
+    type: 'bool',
+    help: 'Print this help and exit.'
+  },
+  {
+    names: ['step', 's'],
+    type: 'bool',
+    help: 'Step through a mancala game (player vs computer).'
+  }
 ];
 
-// Shortcut to create parser and parse `process.argv` in one step.
+var parser = dashdash.createParser({options: options});
 try {
-  var opts = dashdash.parse({options: options});
+  var opts = parser.parse(process.argv);
 } catch (e) {
-  console.error('hello: error: %s', e.message);
+  console.error('%s: error: %s', path.basename(process.argv[1]), e.message);
   process.exit(1);
 }
 
-if (opts.verbose) {
-  console.log("# opts:", opts);
-  console.log("# args:", opts._args);
+if (opts.help) {
+  var help = parser.help().trimRight();
+  console.log('usage: node cateye.js [OPTIONS]\n' + 'options:\n' + help);
+  process.exit(0);
 }
 
-// See "help.js" for a small example that uses generated option help output.
+if (opts.step) {
+  var game = new Mancala();
+  var prompt = readline.createInterface(process.stdin, process.stdout);
+
+  prompt.on('line', function(line) {
+    game.play(line.trim());
+    prompt.prompt();
+  }).on('close', function() {
+    process.exit(0);
+  });
+
+  game.print();
+  prompt.prompt();
+}
