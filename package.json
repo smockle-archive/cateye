@@ -1,0 +1,15 @@
+{
+  "name": "cateye",
+  "version": "1.0.0",
+  "description": "Cateye is a text-based mancala game AI written in JavaScript.",
+  "main": "cateye.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smockle/cateye"
+  },
+  "author": "Clay Miller <clay@smockle.com>",
+  "license": "ISC"
+}
