@@ -44,8 +44,6 @@ if (opts.step) {
     process.exit(0);
   });
 
-  console.log(game.BOARD);
-  console.log(game.board);
   game.print();
   prompt.prompt();
 }
