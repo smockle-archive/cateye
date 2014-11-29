@@ -4,9 +4,10 @@ function Mancala() {
 
   // public variables
   this.board = JSON.parse(JSON.stringify(this.BOARD));
+  this.len = this.board.length;
 
   // private variables
-  var half = Math.ceil(this.board.length / 2);
+  var half = Math.ceil(this.len / 2);
 
   // private functions
   this.divider = function() {
@@ -33,10 +34,9 @@ function Mancala() {
   };
 
   this.bottomHalf = function() {
-    var div = "|".split(""),
-        len = this.board.length;
+    var div = "|".split("");
 
-    for (var i = len - 1; i >= half; i--) {
+    for (var i = (this.len - 1); i >= half; i--) {
       div.push(" ");
       div.push(this.board[i]);
       div.push(" |");
@@ -62,8 +62,7 @@ function Mancala() {
 
   this.over = function() {
     var empties,
-        i,
-        len = this.board.length;
+        i;
 
     for (empties = 0, i = 0; i < half; i++) {
       if (this.board[i] === 0) {
@@ -72,7 +71,7 @@ function Mancala() {
     }
     if (empties === half) { console.log("game over"); return true; }
 
-    for (empties = 0, i = half; i < len; i++) {
+    for (empties = 0, i = half; i < this.len; i++) {
       if (this.board[i] === 0) {
         empties++;
       }
@@ -84,10 +83,9 @@ function Mancala() {
 
   this.countermove = function() {
     var move = -1,
-        len = this.board.length,
-        utility = -1 * 2 * len;
+        utility = -1 * 2 * this.len;
 
-    for (var i = half; i < len; i++) {
+    for (var i = half; i < this.len; i++) {
       if (this.board[i] !== 0 && (move === -1 || this.utility(i) > utility)) {
         move = i;
       }
@@ -98,24 +96,22 @@ function Mancala() {
   };
 
   this.distribute = function(index) {
-    var marbles = this.board[index],
-        len = this.board.length;
+    var marbles = this.board[index];
 
     this.board[index] = 0;
     while (marbles > 0) {
-      this.board[(++index) % len]++;
+      this.board[(++index) % this.len]++;
       marbles--;
     }
   };
 
   this.utility = function(move) {
     var simulate = JSON.parse(JSON.stringify(this.board)),
-        utility = 0,
-        len = this.board.length;
+        utility = 0;
 
     this.distribute([move]);
 
-    for (utility = 0, i = half; i < len; i++) {
+    for (utility = 0, i = half; i < this.len; i++) {
       utility += this.board[i];
     }
 
@@ -159,7 +155,7 @@ Mancala.prototype.all = function(player) {
   }
 
   var len = moves.length;
-  for (var j = 0; j < moves.length; j++) {
+  for (var j = 0; j < len; j++) {
     console.log("Testing " + player + " move. (" + moves[j] + ")");
     this.distribute(moves[j]);
     this.print();
@@ -177,9 +173,8 @@ Mancala.prototype.reset = function() {
 };
 
 Mancala.prototype.move = function(args) {
-  var index = this.firstInt(args),
-      len = this.board.length,
-      half = Math.ceil(this.board.length / 2);
+  var index = this.firstInt(args)
+      half = Math.ceil(this.len / 2);
 
   if (this.board[index] === 0 || index >= half) {
     console.error("error: invalid move");
