@@ -38,11 +38,14 @@ if (opts.step) {
 
   prompt.on('line', function(line) {
     game.play(line.trim());
+    game.print();
     prompt.prompt();
   }).on('close', function() {
     process.exit(0);
   });
 
+  console.log(game.BOARD);
+  console.log(game.board);
   game.print();
   prompt.prompt();
 }
