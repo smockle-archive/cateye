@@ -161,7 +161,7 @@ Mancala.prototype.all = function(player) {
   var len = moves.length;
   for (var j = 0; j < moves.length; j++) {
     console.log("Testing " + player + " move. (" + moves[j] + ")");
-    this.move([moves[j]]);
+    this.distribute(moves[j]);
     this.print();
 
     if (this.over()) {
@@ -178,9 +178,10 @@ Mancala.prototype.reset = function() {
 
 Mancala.prototype.move = function(args) {
   var index = this.firstInt(args),
-      len = this.board.length;
+      len = this.board.length,
+      half = Math.ceil(this.board.length / 2);
 
-  if (this.board[index] === 0 || index >= len) {
+  if (this.board[index] === 0 || index >= half) {
     console.error("error: invalid move");
     return false;
   }
