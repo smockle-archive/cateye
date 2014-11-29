@@ -81,6 +81,48 @@ function Mancala() {
 
     return false;
   };
+
+  this.countermove = function() {
+    var move = -1,
+        len = this.board.length,
+        utility = -1 * 2 * len;
+
+    for (var i = half; i < len; i++) {
+      if (this.board[i] !== 0 && (move === -1 || this.utility(i) > utility)) {
+        move = i;
+      }
+    }
+
+    this.distribute(move);
+    return true;
+  };
+
+  this.distribute = function(index) {
+    var marbles = this.board[index],
+        len = this.board.length;
+
+    this.board[index] = 0;
+    while (marbles > 0) {
+      this.board[(++index) % len]++;
+      marbles--;
+    }
+  };
+
+  this.utility = function(move) {
+    var simulate = JSON.parse(JSON.stringify(this.board)),
+        utility = 0,
+        len = this.board.length;
+
+    this.distribute([move]);
+
+    for (utility = 0, i = half; i < len; i++) {
+      utility += this.board[i];
+    }
+
+    this.board = JSON.parse(JSON.stringify(simulate));
+
+    return utility;
+  };
 }
 
 // public functions
@@ -100,7 +142,6 @@ Mancala.prototype.play = function(input) {
     map[command](args);
   } else {
     console.error("error: invalid input");
-    // this.exit();
   }
 };
 
@@ -137,7 +178,6 @@ Mancala.prototype.reset = function() {
 
 Mancala.prototype.move = function(args) {
   var index = this.firstInt(args),
-      marbles = this.board[index],
       len = this.board.length;
 
   if (this.board[index] === 0 || index >= len) {
@@ -145,16 +185,18 @@ Mancala.prototype.move = function(args) {
     return false;
   }
 
-  this.board[index] = 0;
-  while (marbles > 0) {
-    this.board[(++index) % len]++;
-    marbles--;
-  }
+  this.distribute(index);
 
   if (this.over()) {
     this.print();
     this.exit();
   }
+
+  this.print();
+
+  console.log("opponents move");
+  this.countermove();
+  return true;
 };
 
 Mancala.prototype.print = function() {
