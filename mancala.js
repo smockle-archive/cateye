@@ -1,3 +1,7 @@
+function isInt(value) {
+  return !isNaN(value) && (function (x) { return (x | 0) === x; }) (parseFloat(value));
+}
+
 function Mancala() {
   // public variables
   this.board = [ 2, 2, 2, 2 ];
@@ -46,19 +50,29 @@ function Mancala() {
 // public functions
 Mancala.prototype.play = function(input) {
   var map = {
+    move: function() { this.move(args); }.bind(this),
     print: function() { this.print(); }.bind(this),
     exit: function() { this.exit(); }.bind(this)
   };
 
-  if (map.hasOwnProperty(input)) {
-    map[input]();
+  var args = input.split(" ");
+  command = args.shift();
+
+  if (map.hasOwnProperty(command)) {
+    map[command](args);
   } else {
-    console.log("invalid input");
+    console.error("error: invalid input");
     this.exit();
   }
 };
 
-Mancala.prototype.move = function(index) {
+Mancala.prototype.move = function(args) {
+  var index = args[0];
+  if (!isInt(index)) {
+    console.error("error: invalid input");
+    this.exit();
+  }
+
   var marbles = this.board[index];
   this.board[index] = 0;
   while (marbles > 0) {
