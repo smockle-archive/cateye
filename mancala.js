@@ -92,6 +92,12 @@ function Mancala() {
     }
 
     this.distribute(move);
+
+    if (this.over()) {
+      this.print();
+      this.exit();
+    }
+    
     return true;
   };
 
