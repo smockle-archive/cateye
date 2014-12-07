@@ -14,9 +14,10 @@ function AndOr(board, player) {
     var move = -1,
     utility = -1 * 2 * this.len;
 
-    for (var i = this.half; i < this.len; i++) {
-      if (this.board[i] !== 0 && (move === -1 || this.utility(i) > utility)) {
-        move = i;
+    for (var i = 0; i < this.half; i++) {
+      var _i = i + this.player;
+      if (this.board[_i] !== 0 && (move === -1 || this.utility(_i) > utility)) {
+        move = _i;
       }
     }
 
@@ -39,8 +40,9 @@ function AndOr(board, player) {
 
     this.distribute([move]);
 
-    for (let i = this.half; i < this.len; i++) {
-      utility += this.board[i];
+    for (let i = 0; i < this.half; i++) {
+      var _i = i + this.player;
+      utility += this.board[_i];
     }
 
     this.board = JSON.parse(JSON.stringify(simulate));
