@@ -182,13 +182,16 @@ Mancala.prototype.reset = function() {
 Mancala.prototype.move = function(args) {
   var index = this.firstInt(args);
 
+  // Check valid move
   if (this.board[index] === 0 || index >= this.half) {
     console.error("error: invalid move");
     return false;
   }
 
+  // My move
   this.distribute(index);
 
+  // Check for game over
   if (this.over()) {
     this.print();
     this.exit();
@@ -196,8 +199,19 @@ Mancala.prototype.move = function(args) {
 
   this.print();
 
-  console.log("opponents move");
-  this.countermove();
+  // Opponent's move
+  this.swapPlayer();
+  console.log(this.getPlayer());
+  var minimax = new Minimax(this.board, this.player);
+  this.board = minimax.play();
+  this.swapPlayer();
+
+  // Check for game over
+  if (this.over()) {
+    this.print();
+    this.exit();
+  }
+
   return true;
 };
 
