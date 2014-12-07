@@ -7,10 +7,13 @@ Run
 ===
 ````
 # Usage information
-$ node cateye.js -h
+$ node --harmony cateye.js -h
 
-# To start
-$ node cateye.js -s
+# Play mancala against an And-Or algorithm-based opponent
+$ node --harmony cateye.js -a
+
+# Play mancala against a Minimax algorithm-based opponent.
+$ node --harmony cateye.js -m
 
 # To play
 > move <location>
@@ -21,6 +24,9 @@ $ node cateye.js -s
 
 # To print current board
 > print
+
+# To reset to a starting board
+> reset
 
 # To exit
 > exit
