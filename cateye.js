@@ -12,9 +12,14 @@ var options = [
     help: 'Print this help and exit.'
   },
   {
-    names: ['step', 's'],
+    names: ['andor', 'a'],
     type: 'bool',
-    help: 'Step through a mancala game (player vs computer).'
+    help: 'Play mancala against an And-Or algorithm-based opponent.'
+  },
+  {
+    names: ['minimax', 'm'],
+    type: 'bool',
+    help: 'Play mancala against a Minimax algorithm-based opponent.'
   }
 ];
 
@@ -32,8 +37,17 @@ if (opts.help) {
   process.exit(0);
 }
 
-if (opts.step) {
-  var game = new Mancala();
+var game;
+
+if (opts.andor) {
+  game = new Mancala("AndOr");
+}
+
+if (opts.minimax) {
+  game = new Mancala("Minimax");
+}
+
+if (opts.andor || opts.minimax) {
   var prompt = readline.createInterface(process.stdin, process.stdout);
 
   prompt.on('line', function(line) {

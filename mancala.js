@@ -1,4 +1,5 @@
 var Minimax = require("./minimax");
+var AndOr = require("./andor");
 
 function Mancala(strategy) {
   // public constants
@@ -97,26 +98,6 @@ function Mancala(strategy) {
     return this.player;
   };
 
-  this.countermove = function() {
-    var move = -1,
-        utility = -1 * 2 * this.len;
-
-    for (var i = half; i < this.len; i++) {
-      if (this.board[i] !== 0 && (move === -1 || this.utility(i) > utility)) {
-        move = i;
-      }
-    }
-
-    this.distribute(move);
-
-    if (this.over()) {
-      this.print();
-      this.exit();
-    }
-
-    return true;
-  };
-
   this.distribute = function(index) {
     var marbles = this.board[index];
 
@@ -125,21 +106,6 @@ function Mancala(strategy) {
       this.board[(++index) % this.len]++;
       marbles--;
     }
-  };
-
-  this.utility = function(move) {
-    var simulate = JSON.parse(JSON.stringify(this.board)),
-        utility = 0;
-
-    this.distribute([move]);
-
-    for (utility = 0, i = half; i < this.len; i++) {
-      utility += this.board[i];
-    }
-
-    this.board = JSON.parse(JSON.stringify(simulate));
-
-    return utility;
   };
 }
 
@@ -202,8 +168,13 @@ Mancala.prototype.move = function(args) {
   // Opponent's move
   this.swapPlayer();
   console.log(this.getPlayer());
-  var minimax = new Minimax(this.board, this.player);
-  this.board = minimax.play();
+  if (this.strategy == this.STRATEGIES.Minimax) {
+    var minimax = new Minimax(this.board, this.player);
+    this.board = minimax.play();
+  } else if (this.strategy == this.STRATEGIES.AndOr) {
+    var andor = new AndOr(this.board, this.player);
+    this.board = andor.play();
+  }
   this.swapPlayer();
 
   // Check for game over
