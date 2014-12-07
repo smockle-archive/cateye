@@ -4,13 +4,13 @@ function Mancala(strategy) {
   // public constants
   this.BOARD = Object.freeze([ 1, 1, 1, 1 ]);
   this.STRATEGIES = Object.freeze({ "Minimax": "Minimax", "AndOr": "AndOr" });
-  this.PLAYERS = Object.freeze({ "ME": 0, "THEM": this.half });
 
   // public variables
   this.board = JSON.parse(JSON.stringify(this.BOARD));
   this.strategy = strategy || this.STRATEGIES.Minimax;
   this.len = this.board.length;
   this.half = Math.ceil(this.len / 2);
+  this.PLAYERS = Object.freeze({ "ME": 0, "THEM": this.half });
   this.player = this.PLAYERS.ME;
 
   // private variables
@@ -165,8 +165,10 @@ Mancala.prototype.play = function(input) {
 
 Mancala.prototype.all = function(player) {
   var limit = 500;
+  this.print();
   while (!this.over() && limit > 0) {
     var minimax = new Minimax(this.board, this.player);
+    console.log(this.getPlayer());
     this.board = minimax.play();
     this.print();
     this.swapPlayer();

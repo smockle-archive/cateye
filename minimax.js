@@ -210,7 +210,9 @@ function Minimax(board, player) {
 }
 
 Minimax.prototype.play = function (ply) {
-  this.distribute(this.chooseMove());
+  var move = this.chooseMove();
+  console.log("Move: " + move);
+  this.distribute(move);
   return this.board;
 };
 
