@@ -133,9 +133,15 @@ Mancala.prototype.all = function(player) {
   var limit = 500;
   this.print();
   while (!this.over() && limit > 0) {
-    var minimax = new Minimax(this.board, this.player);
-    console.log(this.getPlayer());
-    this.board = minimax.play();
+    if (this.strategy == this.STRATEGIES.Minimax) {
+      var minimax = new Minimax(this.board, this.player);
+      console.log(this.getPlayer());
+      this.board = minimax.play();
+    } else if (this.strategy == this.STRATEGIES.AndOr) {
+      var andor = new AndOr(this.board, this.player);
+      console.log(this.getPlayer());
+      this.board = andor.play();
+    }
     this.print();
     this.swapPlayer();
   }

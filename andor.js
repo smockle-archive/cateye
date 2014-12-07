@@ -1,3 +1,5 @@
+/*jshint esnext: true */
+
 function AndOr(board, player) {
   "use strict";
 
