@@ -1,18 +1,24 @@
-function Mancala() {
+var Minimax = require("./minimax");
+
+function Mancala(strategy) {
   // public constants
-  this.BOARD = [ 2, 2, 2, 2 ];
+  this.BOARD = Object.freeze([ 1, 1, 1, 1 ]);
+  this.STRATEGIES = Object.freeze({ "Minimax": "Minimax", "AndOr": "AndOr" });
+  this.PLAYERS = Object.freeze({ "ME": 0, "THEM": this.half });
 
   // public variables
   this.board = JSON.parse(JSON.stringify(this.BOARD));
+  this.strategy = strategy || this.STRATEGIES.Minimax;
   this.len = this.board.length;
+  this.half = Math.ceil(this.len / 2);
+  this.player = this.PLAYERS.ME;
 
   // private variables
-  var half = Math.ceil(this.len / 2);
 
   // private functions
   this.divider = function() {
     var div = "-----".split(""),
-        len = (half - 1) * 4 + 5;
+        len = (this.half - 1) * 4 + 5;
 
     while(div.length < len) {
       div.push("-");
@@ -24,7 +30,7 @@ function Mancala() {
   this.topHalf = function() {
     var div = "|".split("");
 
-    for (var i = 0; i < half; i++) {
+    for (var i = 0; i < this.half; i++) {
       div.push(" ");
       div.push(this.board[i]);
       div.push(" |");
@@ -36,7 +42,7 @@ function Mancala() {
   this.bottomHalf = function() {
     var div = "|".split("");
 
-    for (var i = (this.len - 1); i >= half; i--) {
+    for (var i = (this.len - 1); i >= this.half; i--) {
       div.push(" ");
       div.push(this.board[i]);
       div.push(" |");
@@ -64,21 +70,31 @@ function Mancala() {
     var empties,
         i;
 
-    for (empties = 0, i = 0; i < half; i++) {
+    for (empties = 0, i = 0; i < this.half; i++) {
       if (this.board[i] === 0) {
         empties++;
       }
     }
-    if (empties === half) { console.log("game over"); return true; }
+    if (empties === this.half) { console.log("game over"); return true; }
 
-    for (empties = 0, i = half; i < this.len; i++) {
+    for (empties = 0, i = this.half; i < this.len; i++) {
       if (this.board[i] === 0) {
         empties++;
       }
     }
-    if (empties === half) { console.log("game over"); return true; }
+    if (empties === this.half) { console.log("game over"); return true; }
 
     return false;
+  };
+
+  this.getPlayer = function () {
+    var self = this;
+    return Object.keys(this.PLAYERS).filter(function(key) { return self.PLAYERS[key] === self.player; })[0];
+  };
+
+  this.swapPlayer = function () {
+    this.player = (this.player == this.PLAYERS.ME) ? this.PLAYERS.THEM : this.PLAYERS.ME;
+    return this.player;
   };
 
   this.countermove = function() {
@@ -97,7 +113,7 @@ function Mancala() {
       this.print();
       this.exit();
     }
-    
+
     return true;
   };
 
@@ -148,29 +164,12 @@ Mancala.prototype.play = function(input) {
 };
 
 Mancala.prototype.all = function(player) {
-  var simulate = JSON.parse(JSON.stringify(this.board)),
-      half = Math.ceil(simulate.length / 2),
-      empties = 0,
-      moves = [];
-
-  for (var i = 0; i < half; i++) {
-    if (player === "their") { _i = i + half; } else { _i = i; }
-    if (simulate[_i] !== 0) {
-      moves.push(_i);
-    }
-  }
-
-  var len = moves.length;
-  for (var j = 0; j < len; j++) {
-    console.log("Testing " + player + " move. (" + moves[j] + ")");
-    this.distribute(moves[j]);
+  var limit = 500;
+  while (!this.over() && limit > 0) {
+    var minimax = new Minimax(this.board, this.player);
+    this.board = minimax.play();
     this.print();
-
-    if (this.over()) {
-      continue;
-    } else {
-      return (this.all(player === "their" ? "my" : "their"));
-    }
+    this.swapPlayer();
   }
 };
 
@@ -179,10 +178,9 @@ Mancala.prototype.reset = function() {
 };
 
 Mancala.prototype.move = function(args) {
-  var index = this.firstInt(args)
-      half = Math.ceil(this.len / 2);
+  var index = this.firstInt(args);
 
-  if (this.board[index] === 0 || index >= half) {
+  if (this.board[index] === 0 || index >= this.half) {
     console.error("error: invalid move");
     return false;
   }
