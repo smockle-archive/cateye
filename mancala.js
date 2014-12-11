@@ -3,7 +3,7 @@ var AndOr = require("./andor");
 
 function Mancala(strategy) {
   // public constants
-  this.BOARD = Object.freeze([ 1, 1, 1, 1 ]);
+  this.BOARD = Object.freeze([ 2, 2, 2, 2 ]);
   this.STRATEGIES = Object.freeze({ "Minimax": "Minimax", "AndOr": "AndOr" });
 
   // public variables
@@ -113,6 +113,7 @@ function Mancala(strategy) {
 Mancala.prototype.play = function(input) {
   var map = {
     all: function() { this.all("my"); }.bind(this),
+    mva: function() { this.mva("my"); }.bind(this),
     move: function() { this.move(args); }.bind(this),
     print: function() { this.print(); }.bind(this),
     reset: function() { this.reset(); }.bind(this),
@@ -130,7 +131,7 @@ Mancala.prototype.play = function(input) {
 };
 
 Mancala.prototype.all = function(player) {
-  var limit = 500;
+  var limit = 256;
   this.print();
   while (!this.over() && limit > 0) {
     if (this.strategy == this.STRATEGIES.Minimax) {
@@ -144,6 +145,26 @@ Mancala.prototype.all = function(player) {
     }
     this.print();
     this.swapPlayer();
+    limit--;
+  }
+};
+
+Mancala.prototype.mva = function(player) {
+  var limit = 256;
+  this.print();
+  while (!this.over() && limit > 0) {
+    if (this.player == this.PLAYERS.ME) {
+      var minimax = new Minimax(this.board, this.player);
+      console.log(this.getPlayer());
+      this.board = minimax.play();
+    } else if (this.player == this.PLAYERS.THEM) {
+      var andor = new AndOr(this.board, this.player);
+      console.log(this.getPlayer());
+      this.board = andor.play();
+    }
+    this.print();
+    this.swapPlayer();
+    limit--;
   }
 };
 

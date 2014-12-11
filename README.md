@@ -19,8 +19,11 @@ $ node --harmony cateye.js -m
 > move <location>
 > move 0
 
-# To automate a complete game
+# To automate a complete game (specified algorithm)
 > all
+
+# To automate a complete game (both algorithms)
+> mva
 
 # To print current board
 > print

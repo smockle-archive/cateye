@@ -34,7 +34,7 @@ if (![].includes) {
 function Minimax(board, player) {
   "use strict";
 
-  this.board = board || [1, 1, 1, 1];
+  this.board = board || [2, 2, 2, 2];
   this.moves = {};
   this.len = this.board.length;
   this.half = Math.ceil(this.len / 2);
